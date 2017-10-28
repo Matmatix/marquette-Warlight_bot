@@ -6,10 +6,10 @@
 #                                                                     #
 # @author Jackie <jackie@starapple.nl>                                #
 # @version 1.0                                                        #
-# @license MIT License (http://opensource.org/licenses/MIT)           # 
+# @license MIT License (http://opensource.org/licenses/MIT)           #
 #---------------------------------------------------------------------#
 
-from math import fmod, pi
+from math import *
 from sys import stderr, stdin, stdout
 from time import clock
 
@@ -27,7 +27,7 @@ class Bot(object):
     def run(self):
         '''
         Main loop
-        
+
         Keeps running while being fed data from stdin.
         Writes output to stdout, remember to flush!
         '''
@@ -86,7 +86,7 @@ class Bot(object):
                     stderr.flush()
             except EOFError:
                 return
-    
+
     def update_settings(self, options):
         '''
         Method to update game settings at the start of a new game.
@@ -111,7 +111,7 @@ class Bot(object):
 
                 super_region = self.map.get_super_region_by_id(options[i + 1])
                 region = Region(options[i], super_region)
-                
+
                 self.map.regions.append(region)
                 super_region.regions.append(region)
 
@@ -125,7 +125,7 @@ class Bot(object):
                     neighbour.neighbours.append(region)
 
         if map_type == 'neighbors':
-            
+
             for region in self.map.regions:
 
                 if region.is_on_super_region_border:
@@ -143,85 +143,120 @@ class Bot(object):
         Method to update our map every round.
         '''
         for i in range(0, len(options), 3):
-            
+
             region = self.map.get_region_by_id(options[i])
             region.owner = options[i + 1]
             region.troop_count = int(options[i + 2])
-            
+
     def pick_starting_regions(self, options):
         '''
         Method to select our initial starting regions.
-        
+
         Currently selects six random regions.
         '''
         shuffled_regions = Random.shuffle(Random.shuffle(options))
-        
+
         return ' '.join(shuffled_regions[:6])
 
     def place_troops(self):
         '''
         Method to place our troops.
-        
+
         Currently keeps places a maximum of two troops on random regions.
         '''
         placements = []
         region_index = 0
         troops_remaining = int(self.settings['starting_armies'])
-        
-        owned_regions = self.map.get_owned_regions(self.settings['your_bot'])
-        duplicated_regions = owned_regions * (3 + int(troops_remaining / 2))
-        shuffled_regions = Random.shuffle(duplicated_regions)
-        
-        while troops_remaining:
 
+        owned_regions = self.map.get_owned_regions(self.settings['your_bot'])
+        shuffled_regions = Random.shuffle(owned_regions)
+
+        attackers = int(troops_remaining/2)
+        defenders = troops_remaining - attackers
+
+
+
+        while attackers > 0:
             region = shuffled_regions[region_index]
-            
-            if troops_remaining > 1:
+            borders_enemy = 0
+
+            for neighbour in list(region.neighbours):
+                if neighbour.owner != region.owner:
+                    borders_enemy = 1
+
+            if borders_enemy == 1:
+                    placements.append([region.id, 3])
+
+                    region.troop_count += 3
+                    attackers -= 3
+
+            region_index += 1
+            if region_index == len(shuffled_regions):
+                region_index = 0
+
+        while defenders > 0:
+            region = shuffled_regions[region_index]
+            if region.is_on_super_region_border and troops_remaining > 1:
 
                 placements.append([region.id, 2])
 
                 region.troop_count += 2
-                troops_remaining -= 2
-                
-            else:
+                defenders -= 2
 
+            else:
                  placements.append([region.id, 1])
 
                  region.troop_count += 1
-                 troops_remaining -= 1
+                 defenders -= 1
 
             region_index += 1
-            
+            if region_index == len(shuffled_regions):
+                region_index = 0
+
         return ', '.join(['%s place_armies %s %d' % (self.settings['your_bot'], placement[0],
             placement[1]) for placement in placements])
 
     def attack_transfer(self):
         '''
         Method to attack another region or transfer troops to allied regions.
-        
+
         Currently checks whether a region has more than six troops placed to attack,
         or transfers if more than 1 unit is available.
         '''
         attack_transfers = []
-        
+        enemies = []
+        allies = []
         owned_regions = self.map.get_owned_regions(self.settings['your_bot'])
-        
+
         for region in owned_regions:
             neighbours = list(region.neighbours)
-            while len(neighbours) > 0:
-                target_region = neighbours[Random.randrange(0, len(neighbours))]
-                if region.owner != target_region.owner and region.troop_count > 6:
-                    attack_transfers.append([region.id, target_region.id, 5])
-                    region.troop_count -= 5
-                elif region.owner == target_region.owner and region.troop_count > 1:
-                    attack_transfers.append([region.id, target_region.id, region.troop_count - 1])
-                    region.troop_count = 1
+            for neighbour in neighbours:
+                if neighbour.owner != region.owner:
+                    enemies.append(neighbour)
                 else:
-                    neighbours.remove(target_region)
-        
+                    allies.append(neighbour)
+
+            while len(enemies) > 0 or len(allies) > 0:
+                if len(enemies) > 0:
+                    target_region = enemies[Random.randrange(0, len(enemies))]
+
+                    if target_region.troop_count * 1.2 <= region.troop_count:
+                        attack_transfers.append([region.id, target_region.id, int((region.troop_count * .9)-.5)])
+                        region.troop_count -= int((region.troop_count * .9)-.5)
+                    else:
+                        enemies.remove(target_region)
+
+                if len(allies) > 0:
+                    target_region = allies[Random.randrange(0, len(allies))]
+                    if region.troop_count > 1 and target_region.is_on_super_region_border:
+                        attack_transfers.append([region.id, target_region.id, region.troop_count - 1])
+                        region.troop_count = 1
+                    else:
+                        allies.remove(target_region)
+
         if len(attack_transfers) == 0:
             return 'No moves'
-        
+
         return ', '.join(['%s attack/transfer %s %s %s' % (self.settings['your_bot'], attack_transfer[0],
             attack_transfer[1], attack_transfer[2]) for attack_transfer in attack_transfers])
 
@@ -241,7 +276,7 @@ class Map(object):
         Returns a region instance by id.
         '''
         return [region for region in self.regions if region.id == region_id][0]
-    
+
     def get_super_region_by_id(self, super_region_id):
         '''
         Returns a super region instance by id.
@@ -260,7 +295,7 @@ class SuperRegion(object):
     '''
     def __init__(self, super_region_id, worth):
         '''
-        Initializes with an id, the super region's worth and an empty lists for 
+        Initializes with an id, the super region's worth and an empty lists for
         regions located inside this super region
         '''
         self.id = super_region_id
@@ -289,7 +324,7 @@ class Random(object):
     def randrange(min, max):
         '''
         A pseudo random number generator to replace random.randrange
-        
+
         Works with an inclusive left bound and exclusive right bound.
         E.g. Random.randrange(0, 5) in [0, 1, 2, 3, 4] is always true
         '''
