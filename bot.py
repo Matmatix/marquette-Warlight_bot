@@ -13,6 +13,14 @@ from math import *
 from sys import stderr, stdin, stdout
 from time import clock
 
+attackProb = 1.2
+
+def pullVals(file):
+    with open(str(file)) as f:
+        global attackProb
+        content = f.read().splitlines()
+        attackProb = float(content[0])
+
 class Bot(object):
     '''
     Main bot class
@@ -91,6 +99,7 @@ class Bot(object):
         '''
         Method to update game settings at the start of a new game.
         '''
+        #pullVals('strats.txt')
         key, value = options
         self.settings[key] = value
 
@@ -223,6 +232,7 @@ class Bot(object):
         Currently checks whether a region has more than six troops placed to attack,
         or transfers if more than 1 unit is available.
         '''
+        global attackProb
         attack_transfers = []
         enemies = []
         allies = []
@@ -240,7 +250,7 @@ class Bot(object):
                 if len(enemies) > 0:
                     target_region = enemies[Random.randrange(0, len(enemies))]
 
-                    if target_region.troop_count * 1.2 <= region.troop_count:
+                    if target_region.troop_count * attackProb <= region.troop_count:
                         attack_transfers.append([region.id, target_region.id, int((region.troop_count * .9)-.5)])
                         region.troop_count -= int((region.troop_count * .9)-.5)
                     else:
