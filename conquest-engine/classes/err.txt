@@ -1,0 +1,10 @@
+java.io.IOException: Stream closed
+	at java.io.BufferedInputStream.getBufIfOpen(BufferedInputStream.java:170)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:214)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:265)
+	at io.InStream.run(InStream.java:83)
+java.io.IOException: Stream closed
+	at java.io.BufferedInputStream.getBufIfOpen(BufferedInputStream.java:170)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:214)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:265)
+	at io.InStream.run(InStream.java:83)

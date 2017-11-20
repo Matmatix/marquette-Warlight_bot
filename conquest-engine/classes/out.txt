@@ -1,0 +1,45 @@
+starting game 0
+python /Users/matt/OneDrive/Documents/Marquette/4- Senior Year/COEN 4870/warlight_bot/warlight_bot-TheLandTiger/bot.py
+java bot.BotStarter
+opponent_moves 
+opponent_moves 
+opponent_moves player2 place_armies 13 2 player2 place_armies 13 1 
+opponent_moves 
+opponent_moves player2 place_armies 18 2 player2 place_armies 18 1 
+opponent_moves 
+opponent_moves player2 place_armies 13 2 player2 place_armies 18 2 
+opponent_moves 
+opponent_moves player2 place_armies 18 2 player2 place_armies 13 2 player2 place_armies 13 1 player2 attack/transfer 13 11 5 player2 attack/transfer 18 19 5 
+opponent_moves 
+opponent_moves player2 place_armies 13 2 player2 attack/transfer 11 13 2 player2 attack/transfer 13 11 5 
+opponent_moves 
+opponent_moves player2 place_armies 11 2 player2 attack/transfer 11 13 5 player2 attack/transfer 13 11 3 
+opponent_moves 
+opponent_moves player2 attack/transfer 11 13 5 player2 attack/transfer 13 11 5 
+opponent_moves 
+opponent_moves player2 place_armies 11 2 player2 place_armies 13 1 player2 attack/transfer 11 13 5 player2 attack/transfer 13 11 5 player2 attack/transfer 18 21 5 
+opponent_moves 
+opponent_moves player2 place_armies 11 1 player2 attack/transfer 11 10 5 player2 attack/transfer 13 11 5 player2 attack/transfer 21 18 2 
+opponent_moves 
+opponent_moves player2 place_armies 21 2 player2 attack/transfer 10 11 3 player2 attack/transfer 11 10 5 player2 attack/transfer 13 11 1 player2 attack/transfer 18 21 5 
+opponent_moves 
+opponent_moves player2 place_armies 11 1 player2 attack/transfer 10 11 5 player2 attack/transfer 11 12 5 player2 attack/transfer 21 23 5 
+opponent_moves 
+opponent_moves player2 place_armies 21 2 player2 place_armies 21 1 player2 attack/transfer 21 12 5 player2 attack/transfer 23 21 4 
+opponent_moves 
+opponent_moves player2 place_armies 23 2 player2 place_armies 21 2 player2 attack/transfer 21 12 5 
+opponent_moves 
+opponent_moves player2 attack/transfer 21 18 1 player2 attack/transfer 23 21 2 
+opponent_moves 
+opponent_moves player2 attack/transfer 18 20 5 player2 attack/transfer 21 12 2 
+opponent_moves 
+opponent_moves player2 attack/transfer 20 21 4 
+opponent_moves 
+opponent_moves player2 place_armies 23 2 player2 attack/transfer 12 21 5 player2 attack/transfer 21 23 4 
+opponent_moves 
+opponent_moves player2 place_armies 21 1 player2 attack/transfer 21 23 5 player2 attack/transfer 23 36 5 
+opponent_moves 
+opponent_moves player2 attack/transfer 12 21 1 player2 attack/transfer 21 18 1 player2 attack/transfer 23 22 5 
+opponent_moves 
+player2 won in 19 rounds.
+io.IORobot@58372a00
