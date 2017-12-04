@@ -483,7 +483,6 @@ public class RunGame
 		//if(winner != null) {
 		//	winnerId = winner.getName() == playerName1 ? bot1ObjectId : bot2ObjectId;
 		//}
-
 		System.out.println(winner.getName()+" won in "+score+" rounds.");
 		System.out.println(winner.getBot());
 		//create game directory

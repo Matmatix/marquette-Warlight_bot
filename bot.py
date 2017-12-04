@@ -8,18 +8,24 @@
 # @version 1.0                                                        #
 # @license MIT License (http://opensource.org/licenses/MIT)           #
 #---------------------------------------------------------------------#
-
 from math import *
 from sys import stderr, stdin, stdout
 from time import clock
+import sys
 
-attackProb = 1.2
+attackProb = float(sys.argv[1])
+divisor = float(sys.argv[2])
 
 def pullVals(file):
     with open(str(file)) as f:
         global attackProb
         content = f.read().splitlines()
         attackProb = float(content[0])
+
+
+def passVals(var):
+    import runEA.py
+    runEA.getVals(attackProb);
 
 class Bot(object):
     '''
@@ -99,7 +105,6 @@ class Bot(object):
         '''
         Method to update game settings at the start of a new game.
         '''
-        #pullVals('strats.txt')
         key, value = options
         self.settings[key] = value
 
@@ -180,7 +185,7 @@ class Bot(object):
         owned_regions = self.map.get_owned_regions(self.settings['your_bot'])
         shuffled_regions = Random.shuffle(owned_regions)
 
-        attackers = int(troops_remaining/2)
+        attackers = int(troops_remaining/divisor)
         defenders = troops_remaining - attackers
 
 
@@ -233,6 +238,8 @@ class Bot(object):
         or transfers if more than 1 unit is available.
         '''
         global attackProb
+        #pullVals('strats.txt')
+        #print("Attack Probability: %f" % attackProb)
         attack_transfers = []
         enemies = []
         allies = []
